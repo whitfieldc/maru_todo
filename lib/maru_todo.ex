@@ -1,0 +1,2 @@
+defmodule MaruTodo do
+end
