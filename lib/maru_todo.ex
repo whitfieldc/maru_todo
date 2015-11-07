@@ -6,7 +6,10 @@ defmodule MaruTodo.Router.Homepage do
 	end
 
 	post do
-    	%{ hello: :world }
+    	# IO.inspect(fetch_req_body)
+    	body = fetch_req_body
+
+    	IO.inspect(body.body_params)
 	end
 end
 
