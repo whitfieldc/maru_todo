@@ -29,7 +29,6 @@ defmodule MaruTodo.Mixfile do
   defp deps do
     [
       {:maru, "~> 0.8"},
-      # {:corsica, "~> 0.4"},
       {:cors_plug, "~> 0.1.4"}
     ]
   end

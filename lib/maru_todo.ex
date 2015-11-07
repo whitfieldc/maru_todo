@@ -1,15 +1,3 @@
-defmodule CORS do
-	use Maru.Middleware
-
-	def call(conn, _opts) do
-		conn 
-		|> Plug.Conn.put_resp_header("access-control-allow-origin", "*")
-		|> Plug.Conn.put_resp_header("access-control-allow-headers", "Content-Type")
-		|> Plug.Conn.put_resp_header("access-control-allow-methods", "POST, GET, PUT, PATCH, DELETE, OPTIONS")
-	end
-
-end
-
 defmodule MaruTodo.Router.Homepage do
 	use Maru.Router
 	# plug CORS
@@ -32,14 +20,3 @@ defmodule MaruTodo.API do
     	"Server Error"
     end
 end
-
-
-
-
-# defmodule MaruTodo.CORS do
-# 	use Corsica.Router,
-# 		origins: "*",
-# 		allow_headers: "Content-Type"
-
-# 	resource "/*"
-# end
