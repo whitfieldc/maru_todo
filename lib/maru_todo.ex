@@ -4,6 +4,10 @@ defmodule MaruTodo.Router.Homepage do
 	get do
     	%{ hello: :world }
 	end
+
+	post do
+    	%{ hello: :world }
+	end
 end
 
 
