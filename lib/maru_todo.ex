@@ -11,6 +11,10 @@ defmodule MaruTodo.Router.Homepage do
 
     	IO.inspect(body.body_params)
 	end
+
+	delete do
+		
+	end
 end
 
 
