@@ -14,7 +14,7 @@ defmodule MaruTodo.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :maru, :postgrex, :ecto]]
+    [applications: [:logger, :maru, :postgrex, :ecto], mod: {MaruTodo, []}]
   end
 
   # Dependencies can be Hex packages:

@@ -1,3 +1,18 @@
+defmodule MaruTodo do
+	use Application
+
+	def start(_type, _args) do
+		import Supervisor.Spec, warn: false
+
+		children = [
+			# supervisor(MaruTodo.API, []),
+			worker(MaruTodo.Repo, [])
+		]
+		opts = [strategy: :one_for_one, name: MaruTodo.Supervisor]
+    	Supervisor.start_link(children, opts)
+	end
+end
+
 defmodule MaruTodo.Repo do
 	use Ecto.Repo, otp_app: :maru
 end
@@ -23,22 +38,19 @@ defmodule MaruTodo.Router.Homepage do
 
 	alias MaruTodo.Task
 	alias MaruTodo.Repo
-	# plug CORS
 	get do
     	%{ hello: :world }
 	end
 
 	post do
-    	# IO.inspect(fetch_req_body)
     	body = fetch_req_body
     	changeset = Task.changeset(%Task{}, body.body_params)
     	case Repo.insert(changeset) do
     		{:ok, task} ->
-    			IO.inspect(task)
+    			task
     		{:error, changeset} ->
     			status(400)
     	end
-    	# IO.inspect(body.body_params)
 	end
 
 	# patch do
