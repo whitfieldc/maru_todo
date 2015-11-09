@@ -11,6 +11,10 @@ use Mix.Config
 config :maru, MaruTodo.API,
 	http: [port: 8880]
 
+config :maru, MaruTodo.Repo,
+	adapter: Ecto.Adapters.Postgres,
+	database: "maru_todo"
+
 # You can configure for your application as:
 #
 #     config :maru_todo, key: :value
@@ -18,7 +22,7 @@ config :maru, MaruTodo.API,
 # And access this configuration in your application as:
 #
 #     Application.get_env(:maru_todo, :key)
-#
+#u
 # Or configure a 3rd-party app:
 #
 #     config :logger, level: :info

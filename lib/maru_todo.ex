@@ -1,5 +1,8 @@
 defmodule MaruTodo.Router.Homepage do
 	use Maru.Router
+
+	import Ecto.Query
+	alias MaruTodo.Tasks
 	# plug CORS
 	get do
     	%{ hello: :world }
@@ -12,8 +15,24 @@ defmodule MaruTodo.Router.Homepage do
     	IO.inspect(body.body_params)
 	end
 
-	delete do
+	patch do
 		
+	end
+
+	delete do
+
+	end
+end
+
+defmodule MaruTodo.Repo do
+	use Ecto.Repo, otp_app: :maru
+end
+
+defmodule MaruTodo.Tasks do
+	use Ecto.Model
+
+	schema "tasks" do
+		field :title
 	end
 end
 
