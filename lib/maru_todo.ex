@@ -47,7 +47,7 @@ defmodule MaruTodo.Router.Homepage do
     	changeset = Task.changeset(%Task{}, body.body_params)
     	case Repo.insert(changeset) do
     		{:ok, task} ->
-    			task
+    			Plug.Conn.send_resp(conn, 200, task)
     		{:error, changeset} ->
     			status(400)
     	end
