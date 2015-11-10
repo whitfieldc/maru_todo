@@ -43,11 +43,14 @@ end
 
 defmodule MaruTodo.Router.Homepage do
 	use Maru.Router
+  import Ecto.Query
 
 	alias MaruTodo.Task
 	alias MaruTodo.Repo
+  alias Maru.Response
 	get do
-    	%{ hello: :world }
+    query = from t in Task, select: t
+    Response.resp_body(Repo.all(query))
 	end
 
 	post do
@@ -58,7 +61,7 @@ defmodule MaruTodo.Router.Homepage do
     			# Plug.Conn.send_resp(conn, 200, task)
           # content_type("application/json")
           # IO.inspect(task.title)
-          Maru.Response.resp_body(task)
+          Response.resp_body(task)
     		{:error, changeset} ->
     			status(400)
     	end
@@ -68,9 +71,17 @@ defmodule MaruTodo.Router.Homepage do
 
 	# end
 
-	# delete do
-
-	# end
+	delete do
+    # query = from t in Task, select: t
+    case Repo.delete_all(Task) do
+      {_number, nil} ->
+        status(200)
+        Response.resp_body("[]")
+      _ ->
+        status(500)
+        "Delete Failed"
+    end
+	end
 end
 
 
