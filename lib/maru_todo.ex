@@ -33,6 +33,14 @@ defmodule MaruTodo.Task do
 	end
 end
 
+defimpl Poison.Encoder, for: MaruTodo.Task do
+  def encode(model, opts) do
+    model
+    |> Map.take([:title, :id])
+    |> Poison.Encoder.encode(opts)
+  end
+end
+
 defmodule MaruTodo.Router.Homepage do
 	use Maru.Router
 
@@ -47,7 +55,10 @@ defmodule MaruTodo.Router.Homepage do
     	changeset = Task.changeset(%Task{}, body.body_params)
     	case Repo.insert(changeset) do
     		{:ok, task} ->
-    			Plug.Conn.send_resp(conn, 200, task)
+    			# Plug.Conn.send_resp(conn, 200, task)
+          # content_type("application/json")
+          # IO.inspect(task.title)
+          Maru.Response.resp_body(task)
     		{:error, changeset} ->
     			status(400)
     	end
