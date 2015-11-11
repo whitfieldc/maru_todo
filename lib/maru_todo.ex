@@ -21,9 +21,12 @@ defmodule MaruTodo.Task do
 	use Ecto.Model
 	import Ecto.Changeset
 
+  after_load :generate_url_string
+
 	schema "tasks" do
 		field :title
     field :completed, :boolean, default: false, null: false
+    field :url
 	end
 
 	@required_fields ~w(title)
@@ -33,6 +36,17 @@ defmodule MaruTodo.Task do
 		task
 		|> cast(params, @required_fields)
 	end
+
+  def generate_url_string(task_changeset) do
+    # IO.inspect(task_changeset)
+    id_string = task_changeset.id |> Integer.to_string
+    url = "http://localhost:8880/"<>id_string
+    new_changeset = change(task_changeset, url: url)
+    cast(%Task{}, new_changeset, @required_fields)
+    ####################
+    # need to find way to return updated Ecto model from this function
+    ####################
+  end
 end
 
 defimpl Poison.Encoder, for: MaruTodo.Task do
