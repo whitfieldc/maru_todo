@@ -21,7 +21,7 @@ defmodule MaruTodo.Task do
 	use Ecto.Model
 	import Ecto.Changeset
 
-  after_load :generate_url_string
+  after_insert :generate_url_string
 
 	schema "tasks" do
 		field :title
@@ -38,13 +38,19 @@ defmodule MaruTodo.Task do
 	end
 
   def generate_url_string(task_changeset) do
-    # IO.inspect(task_changeset)
-    id_string = task_changeset.id |> Integer.to_string
+    IO.inspect(task_changeset.model)
+    id_string = task_changeset.model.id |> Integer.to_string
     url = "http://localhost:8880/"<>id_string
+    IO.inspect(url)
     new_changeset = change(task_changeset, url: url)
-    cast(%Task{}, new_changeset, @required_fields)
+    # case MaruTodo.Repo.update(new_changeset) do
+    #   {:ok, model} ->
+    #     model
+    #   {:error, changeset} ->
+    #     changeset
+    # end
     ####################
-    # need to find way to return updated Ecto model from this function
+    # need to create new changeset to allwo update to repo
     ####################
   end
 end
@@ -52,7 +58,7 @@ end
 defimpl Poison.Encoder, for: MaruTodo.Task do
   def encode(model, opts) do
     model
-    |> Map.take([:title, :id, :completed])
+    |> Map.take([:title, :id, :completed, :url])
     |> Poison.Encoder.encode(opts)
   end
 end
@@ -74,6 +80,7 @@ defmodule MaruTodo.Router.Homepage do
     	changeset = Task.changeset(%Task{}, body.body_params)
     	case Repo.insert(changeset) do
     		{:ok, task} ->
+          IO.inspect(task)
           Response.resp_body(task)
     		{:error, changeset} ->
     			status(400)
