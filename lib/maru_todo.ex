@@ -41,20 +41,14 @@ defmodule MaruTodo.Task do
     current_task = task_changeset.model
     id_string = task_changeset.model.id |> Integer.to_string
     url = "http://localhost:8880/"<>id_string
-    IO.inspect(url)
-    new_changeset = MaruTodo.Task.changeset(current_task, %{url: url})
-    IO.inspect(new_changeset)
-    case MaruTodo.Repo.update(new_changeset) do
+    url_update_changeset = MaruTodo.Task.changeset(current_task, %{url: url})
+    case MaruTodo.Repo.update(url_update_changeset) do
       {:ok, model} ->
-        IO.inspect(model)
         model
-        new_changeset
+        url_update_changeset
       {:error, changeset} ->
         changeset
     end
-    ####################
-    # need to create new changeset to allwo update to repo
-    ####################
   end
 end
 
@@ -73,39 +67,46 @@ defmodule MaruTodo.Router.Homepage do
 	alias MaruTodo.Task
 	alias MaruTodo.Repo
   alias Maru.Response
-	get do
-    query = from t in Task, select: t
-    Response.resp_body(Repo.all(query))
-	end
+  namespace :tasks do
+  	get do
+      query = from t in Task, select: t
+      Response.resp_body(Repo.all(query))
+  	end
 
-	post do
-    	body = fetch_req_body
-    	changeset = Task.changeset(%Task{}, body.body_params)
-    	case Repo.insert(changeset) do
-    		{:ok, task} ->
-          number = task.id
-          url_added_task = Repo.get(MaruTodo.Task, number)
-          IO.inspect(url_added_task)
-          Response.resp_body(url_added_task)
-    		{:error, changeset} ->
-    			status(400)
-    	end
-	end
+  	post do
+      	body = fetch_req_body
+      	changeset = Task.changeset(%Task{}, body.body_params)
+      	case Repo.insert(changeset) do
+      		{:ok, task} ->
+            task_id = task.id
+            url_added_task = Repo.get(MaruTodo.Task, task_id)
+            Response.resp_body(url_added_task)
+      		{:error, changeset} ->
+      			status(400)
+      	end
+  	end
 
-	# patch do
+  	# patch do
 
-	# end
+  	# end
 
-	delete do
-    case Repo.delete_all(Task) do
-      {_number, nil} ->
-        status(200)
-        Response.resp_body("[]")
-      _ ->
-        status(500)
-        "Delete Failed"
+  	delete do
+      case Repo.delete_all(Task) do
+        {_number, nil} ->
+          status(200)
+          Response.resp_body("[]")
+        _ ->
+          status(500)
+          "Delete Failed"
+      end
+  	end
+
+    route_param :id do
+      get do
+        Response.resp_body(Repo.get(MaruTodo.Task, params[:id]))
+      end
     end
-	end
+  end
 end
 
 
