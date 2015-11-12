@@ -40,7 +40,7 @@ defmodule MaruTodo.Task do
   def generate_url_string(task_changeset) do
     current_task = task_changeset.model
     id_string = task_changeset.model.id |> Integer.to_string
-    url = "http://localhost:8880/"<>id_string
+    url = "http://localhost:8880/tasks/"<>id_string
     url_update_changeset = MaruTodo.Task.changeset(current_task, %{url: url})
     case MaruTodo.Repo.update(url_update_changeset) do
       {:ok, model} ->
@@ -69,8 +69,10 @@ defmodule MaruTodo.Router.Homepage do
   alias Maru.Response
   namespace :tasks do
   	get do
-      query = from t in Task, select: t
-      Response.resp_body(Repo.all(query))
+      query = (from t in Task, select: t)
+      |> Repo.all
+      |> Response.resp_body
+      # Response.resp_body(Repo.all(query))
   	end
 
   	post do
@@ -86,10 +88,6 @@ defmodule MaruTodo.Router.Homepage do
       	end
   	end
 
-  	# patch do
-
-  	# end
-
   	delete do
       case Repo.delete_all(Task) do
         {_number, nil} ->
@@ -101,10 +99,31 @@ defmodule MaruTodo.Router.Homepage do
       end
   	end
 
-    route_param :id do
+    route_param :task_id do
+
       get do
-        Response.resp_body(Repo.get(MaruTodo.Task, params[:id]))
+        MaruTodo.Task
+        |> Repo.get(params[:task_id])
+        |> Response.resp_body
       end
+
+      patch do
+
+
+      end
+
+      delete do
+        dead_task = MaruTodo.Task |> Repo.get(params[:task_id])
+        case Repo.delete(dead_task) do
+          {:ok, model} ->
+            status(200)
+            Response.resp_body(model)
+          _ ->
+            status(500)
+            "Delete Failed"
+        end
+      end
+
     end
   end
 end
