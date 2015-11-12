@@ -30,25 +30,28 @@ defmodule MaruTodo.Task do
 	end
 
 	@required_fields ~w(title)
-  @optional_fields ~w()
+  @optional_fields ~w(url completed)
 
 	def changeset(task, params \\ :empty) do
 		task
-		|> cast(params, @required_fields)
+		|> cast(params, @required_fields, @optional_fields)
 	end
 
   def generate_url_string(task_changeset) do
-    IO.inspect(task_changeset.model)
+    current_task = task_changeset.model
     id_string = task_changeset.model.id |> Integer.to_string
     url = "http://localhost:8880/"<>id_string
     IO.inspect(url)
-    new_changeset = change(task_changeset, url: url)
-    # case MaruTodo.Repo.update(new_changeset) do
-    #   {:ok, model} ->
-    #     model
-    #   {:error, changeset} ->
-    #     changeset
-    # end
+    new_changeset = MaruTodo.Task.changeset(current_task, %{url: url})
+    IO.inspect(new_changeset)
+    case MaruTodo.Repo.update(new_changeset) do
+      {:ok, model} ->
+        IO.inspect(model)
+        model
+        new_changeset
+      {:error, changeset} ->
+        changeset
+    end
     ####################
     # need to create new changeset to allwo update to repo
     ####################
@@ -80,8 +83,10 @@ defmodule MaruTodo.Router.Homepage do
     	changeset = Task.changeset(%Task{}, body.body_params)
     	case Repo.insert(changeset) do
     		{:ok, task} ->
-          IO.inspect(task)
-          Response.resp_body(task)
+          number = task.id
+          url_added_task = Repo.get(MaruTodo.Task, number)
+          IO.inspect(url_added_task)
+          Response.resp_body(url_added_task)
     		{:error, changeset} ->
     			status(400)
     	end
