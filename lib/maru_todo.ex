@@ -27,10 +27,11 @@ defmodule MaruTodo.Task do
 		field :title
     field :completed, :boolean, default: false, null: false
     field :url
+    field :order, :integer
 	end
 
 	@required_fields ~w(title)
-  @optional_fields ~w(url completed)
+  @optional_fields ~w(url completed order)
 
 	def changeset(task, params \\ :empty) do
 		task
@@ -55,7 +56,7 @@ end
 defimpl Poison.Encoder, for: MaruTodo.Task do
   def encode(model, opts) do
     model
-    |> Map.take([:title, :id, :completed, :url])
+    |> Map.take([:title, :id, :completed, :url, :order])
     |> Poison.Encoder.encode(opts)
   end
 end
@@ -108,8 +109,16 @@ defmodule MaruTodo.Router.Homepage do
       end
 
       patch do
+        body = fetch_req_body.body_params
+        task = MaruTodo.Task |> Repo.get(params[:task_id])
+        patch_changeset = Task.changeset(task, body)
 
-
+        case MaruTodo.Repo.update(patch_changeset) do
+          {:ok, model} ->
+            Response.resp_body(model)
+          {:error, changeset} ->
+            changeset
+        end
       end
 
       delete do
