@@ -77,7 +77,6 @@ defmodule MaruTodo.Router.Homepage do
 
   	post do
         body = fetch_req_body
-        IO.inspect(body)
       	changeset = Task.changeset(%Task{}, body.body_params)
       	case Repo.insert(changeset) do
       		{:ok, task} ->
