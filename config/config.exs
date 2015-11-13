@@ -11,7 +11,7 @@ use Mix.Config
 config :maru, MaruTodo.API,
 	http: [port: 8880]
 
-config :maru, MaruTodo.Repo,
+config :maru_todo, MaruTodo.Repo,
 	adapter: Ecto.Adapters.Postgres,
 	database: "maru_todo"
 

@@ -14,7 +14,7 @@ defmodule MaruTodo do
 end
 
 defmodule MaruTodo.Repo do
-	use Ecto.Repo, otp_app: :maru
+	use Ecto.Repo, otp_app: :maru_todo
 end
 
 defmodule MaruTodo.Task do
@@ -45,7 +45,6 @@ defmodule MaruTodo.Task do
     url_update_changeset = MaruTodo.Task.changeset(current_task, %{url: url})
     case MaruTodo.Repo.update(url_update_changeset) do
       {:ok, model} ->
-        model
         url_update_changeset
       {:error, changeset} ->
         changeset
@@ -77,7 +76,8 @@ defmodule MaruTodo.Router.Homepage do
   	end
 
   	post do
-      	body = fetch_req_body
+        body = fetch_req_body
+        IO.inspect(body)
       	changeset = Task.changeset(%Task{}, body.body_params)
       	case Repo.insert(changeset) do
       		{:ok, task} ->
