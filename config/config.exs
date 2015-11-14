@@ -9,7 +9,8 @@ use Mix.Config
 # 3rd-party users, it should be done in your "mix.exs" file.
 
 config :maru, MaruTodo.API,
-	http: [port: 8880]
+	http: [port: {:system, "PORT"}]
+  # server: true
 
 config :maru_todo, MaruTodo.Repo,
 	adapter: Ecto.Adapters.Postgres,
