@@ -14,7 +14,7 @@ config :maru, MaruTodo.API,
 
 config :maru_todo, MaruTodo.Repo,
 	adapter: Ecto.Adapters.Postgres,
-	database: "maru_todo"
+	database: System.get_env('DATABASE_URL') || "maru_todo"
 
 # You can configure for your application as:
 #
