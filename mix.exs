@@ -31,7 +31,8 @@ defmodule MaruTodo.Mixfile do
       {:maru, "~> 0.8"},
       {:cors_plug, "~> 0.1.4"},
       {:postgrex, ">= 0.0.0"},
-      {:ecto, "~> 1.0"}
+      {:ecto, "~> 1.0"},
+      {:exrm, "~> 0.19.9"}
     ]
   end
 end
