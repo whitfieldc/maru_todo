@@ -1,19 +1,21 @@
 # MaruTodo
 
-**TODO: Add description**
+To-do List JSON API built against (Todo-Backend)[http://todobackend.com/] spec
 
-## Installation
+(Hosted on Heroku)[http://maru-todo.herokuapp.com/tasks]
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
+#### To Run
+```sh
+git clone https://github.com/whitfieldc/maru_todo.git
+cd maru_todo
+mix deps.get
+mix ecto.create
+mix ecto.migrate
+iex -S mix
+```
+Test local version at http://www.todobackend.com/specs/index.html?http://localhost:8000/tasks
 
-  1. Add maru_todo to your list of dependencies in `mix.exs`:
-
-        def deps do
-          [{:maru_todo, "~> 0.0.1"}]
-        end
-
-  2. Ensure maru_todo is started before your application:
-
-        def application do
-          [applications: [:maru_todo]]
-        end
+#### Requirements
+- Elixir 1.1.1
+- Hex
+- PostgreSQL
