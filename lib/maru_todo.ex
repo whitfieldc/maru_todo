@@ -41,7 +41,7 @@ defmodule MaruTodo.Task do
   def generate_url_string(task_changeset) do
     current_task = task_changeset.model
     id_string = task_changeset.model.id |> Integer.to_string
-    url = "http://localhost:8880/tasks/"<>id_string
+    url = "http://maru-todo.herokuapp.com/tasks/"<>id_string
     url_update_changeset = MaruTodo.Task.changeset(current_task, %{url: url})
     case MaruTodo.Repo.update(url_update_changeset) do
       {:ok, model} ->
