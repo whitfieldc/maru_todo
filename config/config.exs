@@ -8,13 +8,31 @@ use Mix.Config
 # if you want to provide default values for your application for
 # 3rd-party users, it should be done in your "mix.exs" file.
 
+defmodule Heroku do
+  def database_config(uri) do
+    parsed_uri = URI.parse(uri)
+    [username, password] = parsed_uri.userinfo
+                           |> String.split(":")
+    [_, database] = parsed_uri.path
+                    |> String.split("/")
+
+    [{:username, username},
+     {:password, password},
+     {:hostname, parsed_uri.host},
+     {:database, database},
+     {:port, parsed_uri.port},
+     {:adapter, Ecto.Adapters.Postgres}]
+  end
+end
+
 config :maru, MaruTodo.API,
 	http: [port: {:system, "PORT"}]
   # server: true
 
 config :maru_todo, MaruTodo.Repo,
-	adapter: Ecto.Adapters.Postgres,
-	database: System.get_env("DATABASE_URL")
+	"DATABASE_URL"
+  |> System.get_env
+  |> Heroku.database_config
 
 # You can configure for your application as:
 #
