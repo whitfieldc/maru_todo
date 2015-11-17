@@ -1,3 +1,4 @@
+####### maru_todo.ex
 defmodule MaruTodo do
 	use Application
 
@@ -13,9 +14,10 @@ defmodule MaruTodo do
 	end
 end
 
-defmodule MaruTodo.Repo do
-	use Ecto.Repo, otp_app: :maru_todo
-end
+####### maru_todo/repo.ex
+# defmodule MaruTodo.Repo do
+# 	use Ecto.Repo, otp_app: :maru_todo
+# end
 
 defmodule MaruTodo.Task do
 	use Ecto.Model
@@ -137,7 +139,7 @@ defmodule MaruTodo.Router.Homepage do
 end
 
 
-
+########## maru_todo/api.ex
 defmodule MaruTodo.API do
     use Maru.Router
     plug CORSPlug
