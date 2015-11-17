@@ -10,7 +10,6 @@ defmodule MaruTodo.Router.Homepage do
       query = (from t in Task, select: t)
       |> Repo.all
       |> Response.resp_body
-      # Response.resp_body(Repo.all(query))
     end
 
     post do
