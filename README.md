@@ -13,7 +13,7 @@ mix ecto.create
 mix ecto.migrate
 iex -S mix
 ```
-Test local version at [http://www.todobackend.com/specs/index.html?http://localhost:8000/tasks](http://www.todobackend.com/specs/index.html?http://localhost:8000/tasks)
+Test local version at [http://www.todobackend.com/specs/index.html?http://localhost:8880/tasks](http://www.todobackend.com/specs/index.html?http://localhost:8880/tasks)
 
 #### Requirements
 - Elixir 1.1.1
