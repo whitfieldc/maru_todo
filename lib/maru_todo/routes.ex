@@ -18,8 +18,11 @@ defmodule MaruTodo.Router.Homepage do
         case Repo.insert(changeset) do
           {:ok, task} ->
             task_id = task.id
-            url_added_task = Repo.get(MaruTodo.Task, task_id)
-            Response.resp_body(url_added_task)
+            task.url = "http://localhost:8880/tasks/" <> Integer.to_string(task_id)
+            # IO.puts(task.url)
+            # url_added_task = Repo.get(MaruTodo.Task, task_id)
+            # Response.resp_body(url_added_task)
+            Response.resp_body(task)
           {:error, changeset} ->
             status(400)
         end
