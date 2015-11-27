@@ -1,6 +1,7 @@
 defmodule MaruTodo.Router.Homepage do
   use Maru.Router
   import Ecto.Query
+  import Ecto.Changeset
 
   alias MaruTodo.Task
   alias MaruTodo.Repo
@@ -17,12 +18,16 @@ defmodule MaruTodo.Router.Homepage do
         changeset = Task.changeset(%Task{}, body.body_params)
         case Repo.insert(changeset) do
           {:ok, task} ->
-            task_id = task.id
-            task.url = "http://localhost:8880/tasks/" <> Integer.to_string(task_id)
-            # IO.puts(task.url)
-            # url_added_task = Repo.get(MaruTodo.Task, task_id)
-            # Response.resp_body(url_added_task)
-            Response.resp_body(task)
+            task_id = task.id |> Integer.to_string
+            task_url = "http://localhost:8880/tasks/" <> task_id
+            optimistic_update = %{
+              title: task.title,
+              completed: task.completed,
+              order: task.order,
+              id: task.id,
+              url: task_url
+            }
+            Response.resp_body(optimistic_update)
           {:error, changeset} ->
             status(400)
         end
