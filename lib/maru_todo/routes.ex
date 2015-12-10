@@ -14,23 +14,23 @@ defmodule MaruTodo.Router.Homepage do
     end
 
     post do
-        body = fetch_req_body
-        changeset = Task.changeset(%Task{}, body.body_params)
-        case Repo.insert(changeset) do
-          {:ok, task} ->
-            task_id = task.id |> Integer.to_string
-            task_url = "http://localhost:8880/tasks/" <> task_id
-            optimistic_update = %{
-              title: task.title,
-              completed: task.completed,
-              order: task.order,
-              id: task.id,
-              url: task_url
-            }
-            Response.resp_body(optimistic_update)
-          {:error, changeset} ->
-            status(400)
-        end
+      body = fetch_req_body
+      changeset = Task.changeset(%Task{}, body.body_params)
+      case Repo.insert(changeset) do
+        {:ok, task} ->
+          task_id = task.id |> Integer.to_string
+          task_url = "http://localhost:8880/tasks/" <> task_id
+          optimistic_update = %{
+            title: task.title,
+            completed: task.completed,
+            order: task.order,
+            id: task.id,
+            url: task_url
+          }
+          Response.resp_body(optimistic_update)
+        {:error, changeset} ->
+          status(400)
+      end
     end
 
     delete do
