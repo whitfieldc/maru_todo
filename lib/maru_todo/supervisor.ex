@@ -6,7 +6,7 @@ defmodule MaruTodo.Supervisor do
   end
 
   def init([]) do
-    [ MaruTodo.Repo
+    [ worker(MaruTodo.Repo, [])
     ] |> supervise strategy: :one_for_one
   end
 

@@ -16,7 +16,7 @@ defmodule MaruTodo.Mixfile do
   end
 
   defp deps do
-    [ {:maru, "~> 0.8"},
+    [ {:maru, "~> 0.9"},
       {:cors_plug, "~> 0.1.4"},
       {:postgrex, ">= 0.0.0"},
       {:ecto, "~> 1.0"}
