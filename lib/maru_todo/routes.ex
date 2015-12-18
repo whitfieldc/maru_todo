@@ -1,79 +1,93 @@
 defmodule MaruTodo.Router.Homepage do
   use Maru.Router
-  import Ecto.Query
-  import Ecto.Changeset
 
-  alias MaruTodo.Task
-  alias MaruTodo.Repo
-  alias Maru.Response
+  helpers do
+    alias MaruTodo.Task, warn: false
+    alias MaruTodo.Repo, warn: false
+    import Ecto.Query, warn: false
+  end
+
   namespace :tasks do
     get do
-      query = (from t in Task, select: t)
-      |> Repo.all
-      |> Response.resp_body
+      query = (from t in Task, select: t) |> Repo.all
+      json conn, query
     end
 
+    params do
+      requires :title,     type: String
+      requires :order,     type: Integer
+      optional :completed, type: Boolean, default: false
+    end
     post do
-        body = fetch_req_body
-        changeset = Task.changeset(%Task{}, body.body_params)
-        case Repo.insert(changeset) do
-          {:ok, task} ->
-            task_id = task.id |> Integer.to_string
-            task_url = "http://localhost:8880/tasks/" <> task_id
-            optimistic_update = %{
-              title: task.title,
-              completed: task.completed,
-              order: task.order,
-              id: task.id,
-              url: task_url
-            }
-            Response.resp_body(optimistic_update)
-          {:error, changeset} ->
-            status(400)
-        end
+      changeset = Task.changeset(%Task{}, params)
+      case Repo.insert(changeset) do
+        {:ok, task} ->
+          json conn, %{
+            title: task.title,
+            completed: task.completed,
+            order: task.order,
+            id: task.id,
+            url: "http://localhost:8880/tasks/#{task.id}",
+          }
+        {:error, _changeset} ->
+          conn
+          |> put_status(400)
+          |> text("Insert Failed")
+      end
     end
 
     delete do
       case Repo.delete_all(Task) do
         {_number, nil} ->
-          status(200)
-          Response.resp_body("[]")
+          json conn, []
         _ ->
-          status(500)
-          "Delete Failed"
+          conn
+          |> put_status(500)
+          |> text("Delete Failed")
       end
     end
 
     route_param :task_id do
-
       get do
-        MaruTodo.Task
-        |> Repo.get(params[:task_id])
-        |> Response.resp_body
+        task = MaruTodo.Task |> Repo.get(params[:task_id])
+        json conn, task
       end
 
+      params do
+        optional :title,     type: String
+        optional :order,     type: Integer
+        optional :completed, type: Boolean
+        at_least_one_of [:title, :order, :completed]
+      end
       patch do
-        body = fetch_req_body.body_params
+        # Next version of Maru will NOT keep nil params
+        changeset =
+          params |> Enum.filter(fn
+            {_, nil} -> false
+            _        -> true
+          end) |> Enum.into(%{})
         task = MaruTodo.Task |> Repo.get(params[:task_id])
-        patch_changeset = Task.changeset(task, body)
+        patch_changeset = Task.changeset(task, changeset)
 
         case MaruTodo.Repo.update(patch_changeset) do
-          {:ok, model} ->
-            Response.resp_body(model)
-          {:error, changeset} ->
-            changeset
+          {:ok, task} ->
+            json conn, task
+          {:error, _changeset} ->
+            conn
+            |> put_status(500)
+            |> text("Update Failed")
         end
       end
 
       delete do
         dead_task = MaruTodo.Task |> Repo.get(params[:task_id])
         case Repo.delete(dead_task) do
-          {:ok, model} ->
-            status(200)
-            Response.resp_body(model)
+          {:ok, task} ->
+            json conn, task
           _ ->
-            status(500)
-            "Delete Failed"
+            conn
+            |> put_status(500)
+            |> text("Delete Failed")
         end
       end
 

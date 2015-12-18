@@ -1,13 +1,8 @@
 defmodule MaruTodo do
-	use Application
+  use Application
 
-	def start(_type, _args) do
-		import Supervisor.Spec, warn: false
+  def start(_type, _args) do
+    MaruTodo.Supervisor.start_link
+  end
 
-		children = [
-			worker(MaruTodo.Repo, [])
-		]
-		opts = [strategy: :one_for_one, name: MaruTodo.Supervisor]
-    	Supervisor.start_link(children, opts)
-	end
 end
