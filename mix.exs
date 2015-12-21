@@ -19,7 +19,8 @@ defmodule MaruTodo.Mixfile do
     [ {:maru, "~> 0.9"},
       {:cors_plug, "~> 0.1.4"},
       {:postgrex, ">= 0.0.0"},
-      {:ecto, "~> 1.0"}
+      {:ecto, "~> 1.0"},
+      {:credo, "~> 0.2", only: [:dev, :test]}
     ]
   end
 end
