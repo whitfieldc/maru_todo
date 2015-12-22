@@ -6,7 +6,7 @@ defmodule MaruTodo.API do
   mount MaruTodo.Router.Homepage
 
   rescue_from :all, as: e do
-    IO.inspect(e)
+    # IO.inspect(e)
     conn
     |> put_status(500)
     |> text("Server Error")
