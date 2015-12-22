@@ -1,6 +1,8 @@
 # MaruTodo
 
-To-do List JSON API built against [Todo-Backend](http://todobackend.com/) spec
+To-do List JSON API built with [Maru framework](http://maru.readme.io)
+
+Tested against [Todo-Backend](http://todobackend.com/) spec
 
 [Hosted on Heroku](http://maru-todo.herokuapp.com/tasks)
 
