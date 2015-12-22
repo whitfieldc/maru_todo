@@ -16,7 +16,7 @@ defmodule MaruTodo.Router.Homepage do
 
     params do
       requires :title,     type: String
-      requires :order,     type: Integer
+      optional :order,     type: Integer
       optional :completed, type: Boolean, default: false
     end
     post do
