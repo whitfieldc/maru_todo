@@ -27,8 +27,8 @@ defmodule MaruTodo.Task do
     case MaruTodo.Repo.update(url_update_changeset) do
       {:ok, model} ->
         url_update_changeset
-      {:error, changeset} ->
-        changeset
+      {:error, returned_changeset} ->
+        returned_changeset
     end
   end
 end

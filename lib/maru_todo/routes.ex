@@ -9,8 +9,9 @@ defmodule MaruTodo.Router.Homepage do
 
   namespace :tasks do
     get do
-      query = (from t in Task, select: t) |> Repo.all
-      json conn, query
+      query = (from t in Task, select: t) 
+      tasks = query |> Repo.all
+      json conn, tasks
     end
 
     params do
