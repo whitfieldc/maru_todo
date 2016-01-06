@@ -35,8 +35,12 @@ end
 
 defimpl Poison.Encoder, for: MaruTodo.Task do
   def encode(model, opts) do
+    IO.inspect("#{Application.get_env(:maru_todo, :base_url)}#{model.id}")
+
     model
     |> Map.take([:title, :id, :completed, :url, :order])
+    |> Map.put_new(:url, "#{Application.get_env(:maru_todo, :base_url)}#{model.id}")
     |> Poison.Encoder.encode(opts)
+    # |> IO.inspect
   end
 end
