@@ -15,6 +15,7 @@ config :maru_todo, MaruTodo.Repo,
 	adapter: Ecto.Adapters.Postgres,
 	database: "maru_todo"
 
+config :maru_todo, base_url: (Mix.env == :dev && "http://localhost:8880/tasks/" || "http://maru-todo.herokuapp.com/tasks/")
 # You can configure for your application as:
 #
 #     config :maru_todo, key: :value
