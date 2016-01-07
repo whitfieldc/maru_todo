@@ -9,7 +9,7 @@ defmodule MaruTodo.Router.Homepage do
 
   namespace :tasks do
     get do
-      query = (from t in Task, select: t) 
+      query = (from t in Task, select: t)
       tasks = query |> Repo.all
       json conn, tasks
     end
@@ -23,13 +23,15 @@ defmodule MaruTodo.Router.Homepage do
       changeset = Task.changeset(%Task{}, params)
       case Repo.insert(changeset) do
         {:ok, task} ->
-          json conn, %{
-            title: task.title,
-            completed: task.completed,
-            order: task.order,
-            id: task.id,
-            url: "http://localhost:8880/tasks/#{task.id}",
-          }
+          # IO.inspect(task)
+          # json conn, %{
+          #   title: task.title,
+          #   completed: task.completed,
+          #   order: task.order,
+          #   id: task.id,
+          #   url: "http://localhost:8880/tasks/#{task.id}",
+          # }
+          json conn, task
         {:error, _changeset} ->
           conn
           |> put_status(400)
@@ -50,7 +52,10 @@ defmodule MaruTodo.Router.Homepage do
 
     route_param :task_id do
       get do
-        task = MaruTodo.Task |> Repo.get(params[:task_id])
+        IO.puts("HELLOOOOO")
+        task = MaruTodo.Task
+          |> IO.inspect
+          |> Repo.get(params[:task_id])
         json conn, task
       end
 
